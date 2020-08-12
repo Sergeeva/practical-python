@@ -73,12 +73,12 @@ def prices_read(filename):
         for row in rows:
             #print(row)
             row_count+=1
-            #try:
-            val = float(row[1])
-            #except ValueError:
-                #print(f"Couldn't parse row {row_count}", row )
-                
-            prices[row[0]] = val 
+            try:
+                prices[row[0]] = float(row[1])
+            except:
+                #IndexError
+                print(f"Couldn't parse row {row_count}", row )
+                pass
         
     return prices
 ##
@@ -104,11 +104,45 @@ def current_portfolio_value(portfolio, prices):
 ##
 
 
+def make_report(portfolio, prices):
+    '''
+    Make list of tuples 
+    with actual information 
+    '''
+
+    rep = []
+    for item in portfolio:
+        val_0 = item[1]*item[2]
+        val_curr = item[1]*prices[item[0]]
+        rep_item = (item[0], item[1], prices[item[0]], (val_curr - val_0))
+        rep.append(rep_item)
+        
+    return rep
+##
+
+
+def print_report(r):
+    '''
+    Printing report table
+    '''
+    headers = ('Name', 'Shares', 'Price', 'Change')
+    print(f'{headers[0]:>10s} {headers[1]:>10s} {headers[2]:>10s} {headers[3]:>10s}')
+    print(f'---------- ---------- ---------- -----------')
+    for name, shares, price, change in r:
+        price_str = '$'+ str(round(price, 2))
+        #print(f'{name:>10s} {shares:>10d} {price:>10.2f} {change:>10.2f}')
+        print(f'{name:>10s} {shares:>10d} {price_str:>10s} {change:>10.2f}')
+    print(f'--------------------------------------------')
+
+    return
+
 portf = portfolio_read_1('Data/portfolio.csv')
 prices = prices_read('Data/prices.csv')
 
-curr_val, val_0, profit = current_portfolio_value(portf, prices)
+#curr_val, val_0, profit = current_portfolio_value(portf, prices)
+#print(f'''Current value: {curr_val:0.2f}
+#          Value 0: {val_0:0.2f}
+#          Profit: {profit:0.2f}''')
 
-print(f'''Current value: {curr_val:0.2f}
-          Value 0: {val_0:0.2f}
-          Profit: {profit:0.2f}''')
+r = make_report(portf, prices)
+print_report(r)
