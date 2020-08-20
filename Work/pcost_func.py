@@ -47,10 +47,18 @@ def pcost_csv(filename):
     with open(filename, 'rt') as f:
         rows = csv.reader(f)
         headers = next(rows)
-        print(headers)
-        for row in rows:
-            print(row)
-            total_cost+=int(row[1])*float(row[2])
+        #print(headers)
+        for rno, row in enumerate(rows):
+            #print(row)
+            d_item = dict(zip(headers, row))
+            try:
+                nshares = int(d_item['shares'])
+                price = float(d_item['price'])
+            except:
+                print('Bad value in row {rno}')
+                pass
+            
+            total_cost+=nshares*price
             
     #f.close()
     ##
@@ -60,11 +68,11 @@ def pcost_csv(filename):
 if len(sys.argv) == 2:
     filename = sys.argv[1]
 else:
-    filename = 'Data/portfolio.csv'
+    filename = 'Data/portfoliodate.csv'
 
-tc = pcost(filename)
+#tc = pcost(filename)
 
 tc1 = pcost_csv(filename)
 
 
-print(tc, tc1)
+print(tc1)

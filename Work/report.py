@@ -4,7 +4,7 @@
 # Exercise 2.4
 
 import csv
-
+from pprint import pprint
 
 def portfolio_read_1(filename):
     '''
@@ -45,10 +45,10 @@ def portfolio_read_2(filename):
         #print(headers)
         for row in rows:
             #print(row)
-            d={}
-            d[headers[0]] =  row[0]
-            d[headers[1]] =  int(row[1])
-            d[headers[2]] =  float(row[2])
+            d=dict(zip(headers, row))
+            #d[headers[0]] =  row[0]
+            #d[headers[1]] =  int(row[1])
+            #d[headers[2]] =  float(row[2])
             portfolio.append(d)
         
     return portfolio
@@ -63,21 +63,21 @@ def prices_read(filename):
     '''
 
     prices = {}
-    row_count = 0
+    #row_count = 0
 
     
     with open(filename, 'rt') as f:
         rows = csv.reader(f)
         #headers = next(rows)
         #print(headers)
-        for row in rows:
+        for i, row in enumerate (rows):
             #print(row)
-            row_count+=1
+            #row_count+=1
             try:
                 prices[row[0]] = float(row[1])
             except:
                 #IndexError
-                print(f"Couldn't parse row {row_count}", row )
+                print(f"Couldn't parse row {i}", row )
                 pass
         
     return prices
@@ -137,6 +137,11 @@ def print_report(r):
     return
 
 portf = portfolio_read_1('Data/portfolio.csv')
+
+portf_dict = portfolio_read_2('Data/portfolio.csv')
+pprint(portf_dict
+)
+
 prices = prices_read('Data/prices.csv')
 
 #curr_val, val_0, profit = current_portfolio_value(portf, prices)
