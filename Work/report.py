@@ -38,14 +38,15 @@ def portfolio_read_2(filename):
 
     portfolio = []
     
-
     with open(filename, 'rt') as f:
         rows = csv.reader(f)
         headers = next(rows)
+        htypes = [str, int, float]
         #print(headers)
         for row in rows:
             #print(row)
-            d=dict(zip(headers, row))
+            converted_row = [func(val) for func, val in zip (htypes,row)]
+            d=dict(zip(headers, converted_row))
             #d[headers[0]] =  row[0]
             #d[headers[1]] =  int(row[1])
             #d[headers[2]] =  float(row[2])
@@ -139,8 +140,7 @@ def print_report(r):
 portf = portfolio_read_1('Data/portfolio.csv')
 
 portf_dict = portfolio_read_2('Data/portfolio.csv')
-pprint(portf_dict
-)
+pprint(portf_dict)
 
 prices = prices_read('Data/prices.csv')
 
